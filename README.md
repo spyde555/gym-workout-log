@@ -1,56 +1,84 @@
-# Welcome to your Expo app 👋
+# Gym Workout Log 🏋️
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A mobile app for logging gym workouts. Track exercises, sets, reps, and weights, then review your workout history with total volume calculations. Built with React Native and Expo.
 
-## Get started
+## Features
 
-1. Install dependencies
+- Log workouts by adding exercises with sets (reps + weight)
+- Choose from a built-in exercise library or add custom exercises
+- View workout history with date and total volume per session
+- Data persists locally on the device (works offline)
+- Haptic feedback on saving a workout
 
-   ```bash
-   npm install
-   ```
+## Screenshots
 
-2. Start the app
+<!-- Screenshots will be added here -->
 
-   ```bash
-   npx expo start
-   ```
+| Home (logging) | Exercise Picker | History      |
+| -------------- | --------------- | ------------ |
+| _screenshot_   | _screenshot_    | _screenshot_ |
 
-In the output, you'll find options to open the app in a
+## Tech Stack
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- **React Native** (0.85) with **Expo** (SDK 56)
+- **Expo Router** for file-based navigation (tabs + modal)
+- **TypeScript**
+- **React Context API** for state management
+- **AsyncStorage** for local data persistence
+- **expo-haptics** for tactile feedback
+- **Jest** for unit testing
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Project Structure
 
-## Get a fresh project
+src/
 
-When you're ready, run:
+app/ # Screens (Expo Router file-based routing)
+
+(tabs)/ # Tab screens: Home, History
+
+pick-exercise.tsx # Modal exercise picker
+
+components/ # Reusable components (ErrorBoundary)
+
+context/ # WorkoutContext (global state + persistence)
+
+constants/ # Types and default exercise list
+
+utils/ # Pure logic functions (+ tests)
+
+## Setup Instructions
+
+1. Clone the repository:
 
 ```bash
-npm run reset-project
+   git clone https://github.com/spyde555/gym-workout-log.git
+   cd gym-workout-log
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. Install dependencies:
 
-### Other setup steps
+```bash
+   npm install
+```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+3. Start the development server:
 
-## Learn more
+```bash
+   npx expo start
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+4. Press `a` to open on an Android emulator, or scan the QR code with the Expo Go app on your phone.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Running Tests
 
-## Join the community
+```bash
+npm test
+```
 
-Join our community of developers creating universal apps.
+## Building an APK
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+A preview build can be produced with EAS Build:
+
+```bash
+eas build --platform android --profile preview
+```

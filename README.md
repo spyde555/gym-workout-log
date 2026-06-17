@@ -12,11 +12,9 @@ A mobile app for logging gym workouts. Track exercises, sets, reps, and weights,
 
 ## Screenshots
 
-<!-- Screenshots will be added here -->
-
-| Home (logging) | Exercise Picker | History      |
-| -------------- | --------------- | ------------ |
-| _screenshot_   | _screenshot_    | _screenshot_ |
+| Home (logging) | Exercise Picker | History |
+|---|---|---|
+| <img src="assets/screenshots/homePage.jpg" width="220"/> | <img src="assets/screenshots/exercisePage.jpg" width="220"/> | <img src="assets/screenshots/historyTab.jpg" width="220"/> |
 
 ## Tech Stack
 
@@ -59,7 +57,7 @@ utils/ # Pure logic functions (+ tests)
 
 ```bash
    npm install
-```
+```oikp[;']
 
 3. Start the development server:
 

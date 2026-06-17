@@ -1,5 +1,10 @@
+import { WorkoutProvider } from "@/context/WorkoutContext";
 import { Stack } from "expo-router";
 
 export default function RootLayout() {
-  return <Stack />;
+  return (
+    <WorkoutProvider>
+      <Stack screenOptions={{ headerShown: false }} />
+    </WorkoutProvider>
+  );
 }

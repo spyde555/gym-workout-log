@@ -12,28 +12,28 @@ import { DEFAULT_EXERCISES } from "@/constants/exercises";
 import { Exercise } from "@/constants/types";
 
 export default function PickExerciseScreen() {
-  const router = useRouter();
-  const [search, setSearch] = useState("");
+  const router = useRouter(); // navegação
+  const [search, setSearch] = useState(""); // texto pesquisado
 
-  // Filter the exercise list by the search text
+  // filtra a lista conforme o que escreves
   const filtered = DEFAULT_EXERCISES.filter((ex) =>
     ex.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  // When an exercise is chosen, pass it back to Home via router params
-const selectExercise = (exercise: Exercise) => {
+  // volta ao Home e envia o exercício escolhido (em JSON, porque params são strings)
+  const selectExercise = (exercise: Exercise) => {
     router.navigate({
       pathname: "/(tabs)",
       params: { selectedExercise: JSON.stringify(exercise) },
     });
   };
 
-  // Add a custom exercise typed by the user
+  // cria um exercício personalizado a partir do texto escrito
   const addCustom = () => {
     const trimmed = search.trim();
-    if (trimmed.length === 0) return;
+    if (trimmed.length === 0) return; // ignora se estiver vazio
     const custom: Exercise = {
-      id: `custom-${Date.now()}`,
+      id: `custom-${Date.now()}`, // id único
       name: trimmed,
       category: "Other",
     };
@@ -42,6 +42,7 @@ const selectExercise = (exercise: Exercise) => {
 
   return (
     <View style={styles.container}>
+      {/* barra de pesquisa */}
       <TextInput
         style={styles.searchInput}
         placeholder="Search or type a custom exercise..."
@@ -49,26 +50,28 @@ const selectExercise = (exercise: Exercise) => {
         onChangeText={setSearch}
       />
 
+      {/* lista de exercícios (só renderiza os visíveis) */}
       <FlatList
         data={filtered}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id} // chave estável
         renderItem={({ item }) => (
           <Pressable
             style={({ pressed }) => [
               styles.row,
-              pressed && styles.rowPressed,
+              pressed && styles.rowPressed, // feedback ao tocar
             ]}
-            onPress={() => selectExercise(item)}
+            onPress={() => selectExercise(item)} // escolher exercício
           >
             <Text style={styles.exerciseName}>{item.name}</Text>
             <Text style={styles.category}>{item.category}</Text>
           </Pressable>
         )}
         ListEmptyComponent={
-          <Text style={styles.emptyText}>No matching exercises.</Text>
+          <Text style={styles.emptyText}>No matching exercises.</Text> // sem resultados
         }
       />
 
+      {/* botão de exercício personalizado (só aparece se houver texto) */}
       {search.trim().length > 0 && (
         <Pressable style={styles.customButton} onPress={addCustom}>
           <Text style={styles.customButtonText}>

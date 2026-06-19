@@ -12,8 +12,8 @@ A mobile app for logging gym workouts. Track exercises, sets, reps, and weights,
 
 ## Screenshots
 
-| Home (logging) | Exercise Picker | History |
-|---|---|---|
+| Home (logging)                                           | Exercise Picker                                              | History                                                    |
+| -------------------------------------------------------- | ------------------------------------------------------------ | ---------------------------------------------------------- |
 | <img src="assets/screenshots/homePage.jpg" width="220"/> | <img src="assets/screenshots/exercisePage.jpg" width="220"/> | <img src="assets/screenshots/historyTab.jpg" width="220"/> |
 
 ## Tech Stack
@@ -55,7 +55,7 @@ utils/ # Pure logic functions (+ tests)
 
 2. Install dependencies:
 
-```bash
+````bash
    npm install
 ```oikp[;']
 
@@ -63,7 +63,7 @@ utils/ # Pure logic functions (+ tests)
 
 ```bash
    npx expo start
-```
+````
 
 4. Press `a` to open on an Android emulator, or scan the QR code with the Expo Go app on your phone.
 

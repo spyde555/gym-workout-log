@@ -8,45 +8,45 @@ import {
 } from "react";
 import { WorkoutSession } from "@/constants/types";
 
-const STORAGE_KEY = "workout_sessions";
+const STORAGE_KEY = "workout_sessions"; // chave onde os treinos são guardados
 
+// o que o contexto disponibiliza à app toda
 type WorkoutContextType = {
   sessions: WorkoutSession[];
   isLoading: boolean;
   addSession: (session: WorkoutSession) => Promise<void>;
 };
 
+// undefined por defeito para detetar uso fora do provider
 const WorkoutContext = createContext<WorkoutContextType | undefined>(
   undefined
 );
 
 export function WorkoutProvider({ children }: { children: ReactNode }) {
-  const [sessions, setSessions] = useState<WorkoutSession[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [sessions, setSessions] = useState<WorkoutSession[]>([]); // lista de treinos
+  const [isLoading, setIsLoading] = useState(true); // true até carregar do armazenamento
 
-  // Load saved sessions when the app starts
+  // carrega os treinos guardados uma vez, ao iniciar a app
   useEffect(() => {
     const loadSessions = async () => {
       try {
         const stored = await AsyncStorage.getItem(STORAGE_KEY);
-        if (stored) {
-          setSessions(JSON.parse(stored));
-        }
+        if (stored) setSessions(JSON.parse(stored)); // null na 1ª vez -> fica vazio
       } catch (error) {
         console.error("Failed to load workout sessions:", error);
       } finally {
-        setIsLoading(false);
+        setIsLoading(false); // corre sempre, com ou sem erro
       }
     };
-
-    loadSessions();
+    loadSessions(); // o useEffect não pode ser async, por isso chamamos aqui
   }, []);
 
+  // adiciona um treino: atualiza o estado e guarda no armazenamento
   const addSession = async (session: WorkoutSession) => {
     try {
-      const updated = [session, ...sessions];
-      setSessions(updated);
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      const updated = [session, ...sessions]; // mais recente primeiro
+      setSessions(updated); // atualiza o ecrã
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated)); // guarda no disco
     } catch (error) {
       console.error("Failed to save workout session:", error);
     }
@@ -59,6 +59,7 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// hook personalizado para os ecrãs usarem useWorkouts()
 export function useWorkouts() {
   const context = useContext(WorkoutContext);
   if (!context) {

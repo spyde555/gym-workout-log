@@ -4,8 +4,9 @@ import { useWorkouts } from "@/context/WorkoutContext";
 import { formatDate, sessionTotalVolume } from "@/utils/workout";
 
 export default function HistoryScreen() {
-  const { sessions, isLoading } = useWorkouts();
+  const { sessions, isLoading } = useWorkouts(); // lê o estado global (não tem estado próprio)
 
+  // enquanto carrega do armazenamento, mostra um spinner
   if (isLoading) {
     return (
       <SafeAreaView style={styles.center} edges={["top"]}>
@@ -18,9 +19,10 @@ export default function HistoryScreen() {
     <SafeAreaView style={styles.container} edges={["top"]}>
       <Text style={styles.title}>History</Text>
 
+      {/* lista dos treinos guardados */}
       <FlatList
         data={sessions}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id} // chave estável
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={
           <Text style={styles.empty}>
@@ -31,10 +33,12 @@ export default function HistoryScreen() {
           <View style={styles.card}>
             <View style={styles.cardHeader}>
               <Text style={styles.date}>{formatDate(item.date)}</Text>
+              {/* volume total = soma de reps x peso */}
               <Text style={styles.volume}>
                 {sessionTotalVolume(item)} kg total
               </Text>
             </View>
+            {/* uma linha por exercício, com nº de sets */}
             {item.exercises.map((entry, i) => (
               <Text key={i} style={styles.exerciseLine}>
                 {entry.exercise.name} — {entry.sets.length}{" "}

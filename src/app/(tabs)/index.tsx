@@ -16,11 +16,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   const router = useRouter();
-  const params = useLocalSearchParams();
-  const { addSession } = useWorkouts();
+  const params = useLocalSearchParams(); // recebe o exercício vindo do modal
+  const { addSession } = useWorkouts(); // função para guardar do contexto
 
-  const [entries, setEntries] = useState<ExerciseEntry[]>([]);
+  const [entries, setEntries] = useState<ExerciseEntry[]>([]); // treino em construção
 
+  // quando volta do modal com um exercício, adiciona-o ao treino
   useEffect(() => {
     if (params.selectedExercise) {
       try {
@@ -29,14 +30,16 @@ export default function HomeScreen() {
         );
         setEntries((prev) => [
           ...prev,
-          { exercise, sets: [{ reps: 0, weight: 0 }] },
+          { exercise, sets: [{ reps: 0, weight: 0 }] }, // adiciona com 1 set vazio
         ]);
       } catch (e) {
         console.error("Failed to parse selected exercise", e);
       }
-router.setParams({ selectedExercise: undefined });    }
+      router.setParams({ selectedExercise: undefined }); // limpa para não repetir
+    }
   }, [params.selectedExercise]);
 
+  // atualiza reps ou peso de um set (de forma imutável)
   const updateSet = (
     exIndex: number,
     setIndex: number,
@@ -45,17 +48,18 @@ router.setParams({ selectedExercise: undefined });    }
   ) => {
     const num = parseInt(value, 10);
     setEntries((prev) => {
-      const copy = [...prev];
+      const copy = [...prev]; // nova cópia (nova referência)
       const sets = [...copy[exIndex].sets];
       sets[setIndex] = {
         ...sets[setIndex],
-        [field]: isNaN(num) ? 0 : num,
+        [field]: isNaN(num) ? 0 : num, // input inválido -> 0
       };
       copy[exIndex] = { ...copy[exIndex], sets };
       return copy;
     });
   };
 
+  // adiciona mais um set a um exercício
   const addSet = (exIndex: number) => {
     setEntries((prev) => {
       const copy = [...prev];
@@ -67,23 +71,25 @@ router.setParams({ selectedExercise: undefined });    }
     });
   };
 
+  // remove um exercício da lista
   const removeExercise = (exIndex: number) => {
     setEntries((prev) => prev.filter((_, i) => i !== exIndex));
   };
 
+  // guarda o treino: valida, cria o objeto, persiste, vibra e limpa
   const saveWorkout = async () => {
     if (entries.length === 0) {
       Alert.alert("Nothing to save", "Add at least one exercise first.");
-      return;
+      return; // não guarda treino vazio
     }
     const session: WorkoutSession = {
-      id: `session-${Date.now()}`,
-      date: new Date().toISOString(),
+      id: `session-${Date.now()}`, // id único
+      date: new Date().toISOString(), // data como string ISO
       exercises: entries,
     };
-    await addSession(session);
-    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    setEntries([]);
+    await addSession(session); // guarda (contexto + armazenamento)
+    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success); // vibração
+    setEntries([]); // limpa para o próximo treino
     Alert.alert("Saved!", "Your workout has been logged.");
   };
 
@@ -91,6 +97,7 @@ router.setParams({ selectedExercise: undefined });    }
     <SafeAreaView style={styles.container} edges={["top"]}>
       <Text style={styles.title}>Today&apos;s Workout</Text>
 
+      {/* lista dos exercícios do treino atual */}
       <FlatList
         data={entries}
         keyExtractor={(item, index) => `${item.exercise.id}-${index}`}
@@ -109,6 +116,7 @@ router.setParams({ selectedExercise: undefined });    }
               </Pressable>
             </View>
 
+            {/* cada set: reps + peso */}
             {item.sets.map((set, setIndex) => (
               <View key={setIndex} style={styles.setRow}>
                 <Text style={styles.setLabel}>Set {setIndex + 1}</Text>
@@ -138,6 +146,7 @@ router.setParams({ selectedExercise: undefined });    }
         )}
       />
 
+      {/* botões: adicionar exercício (abre o modal) e guardar */}
       <View style={styles.footer}>
         <Pressable
           style={styles.addExerciseBtn}
